@@ -10,7 +10,7 @@ print("Теперь для каждой из 2 молекул введите е�
 a = int(input())
 b = int(input())
 if type(temperature) != int or type(length) != int or length < 1000 or length > 3000 or temperature < 0 or temperature > 500 or (material != "азот" and material != "кислород")\
-        or type(material) != str or a < -length / 2 or b < -length / 2 or a > length / 2 or b > length / 2 or type(a) != int or type(b) != int:
+        or type(material) != str or a <= -length / 2 or b <= -length / 2 or a >= length / 2 or b >= length / 2 or type(a) != int or type(b) != int or abs(a - b) < 10:
     print("Что ж, видимо, вы не хотите посмотреть движение частицы.")
 else:
     #N = int(input("Введите количество молекул: "))
