@@ -41,7 +41,7 @@ else:
         ax.set_yticks([])
         points_ax = [0] * (N)
         for i in range(N):
-            points_ax[i], = ax.plot([], [], 'o', c = colors[i], ms = 15)
+            points_ax[i], = ax.plot([], [], 'o', c = colors[i], ms = 5)
         ds = []
         for i in range(N):
             ds.append([0] * (n + 1))
@@ -53,28 +53,20 @@ else:
                 ds[j][i + 1] = ds[j][i] + dr[j]
                 if ds[j][i + 1] < -length / 2 + 5:
                     ds[j][i + 1] = -length + 10 - ds[j][i + 1]
-                    dr[j] = -dr[j]
                 if ds[j][i + 1] > length / 2 - 5:
                     ds[j][i + 1] = length - 10 - ds[j][i + 1]
-                    dr[j] = -dr[j]
             for j in range(N):
                 for k in range(j + 1, N):
                     if abs(ds[j][i + 1] - ds[k][i + 1]) < 10 or (ds[j][i + 1] - ds[k][i + 1]) * (ds[j][i] - ds[k][i]) < 0:
                         if ds[j][i + 1] < -length / 2 + 5 or ds[j][i + 1] > length / 2 - 5:
                             ds[j][i + 1] = ds[j][i]
-                            dr[j] = 0
                             ds[k][i + 1] = ds[k][i] - dr[k]
-                            dr[k] = -dr[k]
                         elif ds[k][i + 1] < -length / 2 + 5 or ds[k][i + 1] > length / 2 - 5:
                             ds[k][i + 1] = ds[k][i]
-                            dr[k] = 0
                             ds[j][i + 1] = ds[j][i] - dr[j]
-                            dr[j] = -dr[j]
                         else:
                             ds[j][i + 1] = ds[j][i] - dr[j]
                             ds[k][i + 1] = ds[k][i] - dr[k]
-                            dr[j] = -dr[j]
-                            dr[k] = -dr[k]
 
 
         def up(i):
