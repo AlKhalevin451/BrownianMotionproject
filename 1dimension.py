@@ -5,12 +5,14 @@ import matplotlib.animation as animation
 
 length = int(input("Введите длину колбы (от 1000 до 3000): "))
 temperature = int(input("Введите комнатную температуру (в кельвинах до 500): "))
-material = input("Выберите вещество (азот или кислород): ")
+material = input("Выберите вещество (азот, водород или кислород): ")
 print("Теперь для каждой из 2 молекул введите её координаты, попадающие в диапозон и с точностью до знака: ")
 a = int(input())
 b = int(input())
-if type(temperature) != int or type(length) != int or length < 1000 or length > 3000 or temperature < 0 or temperature > 500 or (material != "азот" and material != "кислород")\
-        or type(material) != str or a < -length / 2 + 5 or b < -length / 2 + 5 or a > length / 2 - 5 or b > length / 2 - 5 or type(a) != int or type(b) != int or abs(a - b) < 10:
+materials = ["азот", "водород", "кислород"]
+if (type(temperature) != int or type(length) != int or length < 1000 or length > 3000 or temperature < 0 or temperature > 500
+        or material not in materials or type(material) != str or a < -length / 2 + 5 or b < -length / 2 + 5
+        or a > length / 2 - 5 or b > length / 2 - 5 or type(a) != int or type(b) != int or abs(a - b) < 10):
     print("Что ж, видимо, вы не хотите посмотреть движение частицы.")
 else:
     #N = int(input("Введите количество молекул: "))
@@ -22,6 +24,8 @@ else:
     k = 1.38
     if material == "азот":
         m = 14
+    elif material == "водород":
+        m = 2
     else:
         m = 32
     dt = 3 * k * temperature / m
@@ -54,8 +58,8 @@ else:
             r[i + 1] = length - 10 - r[i + 1]
             dr = -dr
         if abs(s[i + 1] - r[i + 1]) < 10 or (s[i + 1] - r[i + 1]) * (s[i] - r[i]) < 0:
-            s[i + 1] = s[i]
-            r[i + 1] = r[i]
+            s[i + 1] = s[i] - ds
+            r[i + 1] = r[i] - dr
             ds = -ds
             dr = -dr
 
