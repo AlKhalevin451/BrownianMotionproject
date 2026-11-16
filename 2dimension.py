@@ -65,14 +65,17 @@ else:
         if sy[i + 1] < -height / 2 + 5 or sy[i + 1] > height / 2 - 5:
             fl1 += 1
             sy[i + 1] = sy[i]
-            sy[i + 1] += ds * np.cos(phi1)
+            sx[i + 1] += ds * np.cos(phi1)
         if sx[i + 1] < -length / 2 + 5 or sx[i + 1] > length / 2 - 5:
             fl1 += 1
             sx[i + 1] = sx[i]
             sy[i + 1] += ds * np.sin(phi1)
         if fl1 == 2:
-            sx[i + 1] = sx[i] + ds * np.cos(phi1 + np.pi * 1.5)
-            sy[i + 1] = sy[i] + ds * np.sin(phi1 + np.pi * 1.5)
+            x1 = min(ds ** 2 * np.cos(phi1), abs(sx[i] - length/2 + 5), abs(sx[i] + length/2 - 5))
+            y1 = min(ds ** 2 * np.sin(phi1), abs(sy[i] - height / 2 + 5), abs(sy[i] + height / 2 - 5))
+            dist1 = np.sqrt(x1**2 + y1**2)
+            sx[i + 1] = sx[i] + dist1 * np.cos(-phi1 + np.pi * 2)
+            sy[i + 1] = sy[i] + dist1 * np.sin(-phi1 + np.pi * 2)
         if rx[i + 1] < -length / 2 + 5 or rx[i + 1] > length / 2 - 5:
             fl2 += 1
             rx[i + 1] = rx[i]
@@ -80,14 +83,17 @@ else:
         if ry[i + 1] < -height / 2 + 5 or ry[i + 1] > height / 2 - 5:
             fl2 += 1
             ry[i + 1] = ry[i]
-            ry[i + 1] += dr * np.cos(phi2)
+            rx[i + 1] += dr * np.cos(phi2)
         if rx[i + 1] < -length / 2 + 5 or rx[i + 1] > length / 2 - 5:
             fl1 += 1
             rx[i + 1] = rx[i]
             ry[i + 1] += dr * np.sin(phi2)
         if fl2 == 2:
-            rx[i + 1] = rx[i] + dr * np.cos(phi2 + np.pi * 1.5)
-            ry[i + 1] = ry[i] + dr * np.sin(phi2 + np.pi * 1.5)
+            x2 = min(dr ** 2 * np.cos(phi2), abs(rx[i] - length / 2 + 5), abs(rx[i] + length / 2 - 5))
+            y2 = min(dr ** 2 * np.sin(phi2), abs(ry[i] - height / 2 + 5), abs(ry[i] + height / 2 - 5))
+            dist2 = np.sqrt(x2 ** 2 + y2 ** 2)
+            rx[i + 1] = rx[i] + dist2 * np.cos(-phi2 + np.pi * 2)
+            ry[i + 1] = ry[i] + dist2 * np.sin(-phi2 + np.pi * 2)
         fl1 = 0
         fl2 = 0
         distance = np.sqrt((rx[i + 1] - sx[i + 1]) ** 2 + (sy[i + 1] - ry[i + 1]) ** 2)
@@ -98,41 +104,50 @@ else:
                 rx[i + 1] = rx[i]
                 ry[i + 1] = ry[i]
             else:
-                delta = np.sqrt(2) * distance * np.sqrt(1 - np.cos(abs(phi1 - phi2)))
+                if abs(phi1 - phi2) < np.pi:
+                    delta = np.sqrt(2) * distance * np.sqrt(1 - np.cos(abs(np.pi - 2 * (phi1 - phi2))))
+                else:
+                    delta = np.sqrt(2) * distance * np.sqrt(1 - np.cos(abs(np.pi - phi1 - phi2)))
                 sx[i + 1] = sx[i] + delta * np.cos(abs(phi1 - phi2))
                 sy[i + 1] = sy[i] + delta * np.sin(abs(phi1 - phi2))
                 rx[i + 1] = rx[i] + delta * np.cos(abs(phi1 - phi2))
                 ry[i + 1] = ry[i] + delta * np.sin(abs(phi1 - phi2))
-            if sx[i + 1] < -length / 2 + 5 or sx[i + 1] > length / 2 - 5:
-                fl1 += 1
-                sx[i + 1] = sx[i]
-                sy[i + 1] += ds * np.sin(phi1)
-            if sy[i + 1] < -height / 2 + 5 or sy[i + 1] > height / 2 - 5:
-                fl1 += 1
-                sy[i + 1] = sy[i]
-                sy[i + 1] += ds * np.cos(phi1)
-            if sx[i + 1] < -length / 2 + 5 or sx[i + 1] > length / 2 - 5:
-                fl1 += 1
-                sx[i + 1] = sx[i]
-                sy[i + 1] += ds * np.sin(phi1)
-            if fl1 == 2:
-                sx[i + 1] = sx[i] + ds * np.cos(phi1 + np.pi * 1.5)
-                sy[i + 1] = sy[i] + ds * np.sin(phi1 + np.pi * 1.5)
-            if rx[i + 1] < -length / 2 + 5 or rx[i + 1] > length / 2 - 5:
-                fl2 += 1
-                rx[i + 1] = rx[i]
-                ry[i + 1] += dr * np.sin(phi2)
-            if ry[i + 1] < -height / 2 + 5 or ry[i + 1] > height / 2 - 5:
-                fl2 += 1
-                ry[i + 1] = ry[i]
-                ry[i + 1] += dr * np.cos(phi2)
-            if rx[i + 1] < -length / 2 + 5 or rx[i + 1] > length / 2 - 5:
-                fl1 += 1
-                rx[i + 1] = rx[i]
-                ry[i + 1] += dr * np.sin(phi2)
-            if fl2 == 2:
-                rx[i + 1] = rx[i] + dr * np.cos(phi2 + np.pi * 1.5)
-                ry[i + 1] = ry[i] + dr * np.sin(phi2 + np.pi * 1.5)
+                if sx[i + 1] < -length / 2 + 5 or sx[i + 1] > length / 2 - 5:
+                    fl1 += 1
+                    sx[i + 1] = sx[i]
+                    sy[i + 1] += ds * np.sin(phi1)
+                if sy[i + 1] < -height / 2 + 5 or sy[i + 1] > height / 2 - 5:
+                    fl1 += 1
+                    sy[i + 1] = sy[i]
+                    sx[i + 1] += ds * np.cos(phi1)
+                if sx[i + 1] < -length / 2 + 5 or sx[i + 1] > length / 2 - 5:
+                    fl1 += 1
+                    sx[i + 1] = sx[i]
+                    sy[i + 1] += ds * np.sin(phi1)
+                if fl1 == 2:
+                    x1 = min(ds ** 2 * np.cos(phi1), abs(sx[i] - length / 2 + 5), abs(sx[i] + length / 2 - 5))
+                    y1 = min(ds ** 2 * np.sin(phi1), abs(sy[i] - height / 2 + 5), abs(sy[i] + height / 2 - 5))
+                    dist1 = np.sqrt(x1 ** 2 + y1 ** 2)
+                    sx[i + 1] = sx[i] + dist1 * np.cos(-phi1 + np.pi * 2)
+                    sy[i + 1] = sy[i] + dist1 * np.sin(-phi1 + np.pi * 2)
+                if rx[i + 1] < -length / 2 + 5 or rx[i + 1] > length / 2 - 5:
+                    fl2 += 1
+                    rx[i + 1] = rx[i]
+                    ry[i + 1] += dr * np.sin(phi2)
+                if ry[i + 1] < -height / 2 + 5 or ry[i + 1] > height / 2 - 5:
+                    fl2 += 1
+                    ry[i + 1] = ry[i]
+                    rx[i + 1] += dr * np.cos(phi2)
+                if rx[i + 1] < -length / 2 + 5 or rx[i + 1] > length / 2 - 5:
+                    fl1 += 1
+                    rx[i + 1] = rx[i]
+                    ry[i + 1] += dr * np.sin(phi2)
+                if fl2 == 2:
+                    x2 = min(dr ** 2 * np.cos(phi2), abs(rx[i] - length / 2 + 5), abs(rx[i] + length / 2 - 5))
+                    y2 = min(dr ** 2 * np.sin(phi2), abs(ry[i] - height / 2 + 5), abs(ry[i] + height / 2 - 5))
+                    dist2 = np.sqrt(x2 ** 2 + y2 ** 2)
+                    rx[i + 1] = rx[i] + dist2 * np.cos(-phi2 + np.pi * 2)
+                    ry[i + 1] = ry[i] + dist2 * np.sin(-phi2 + np.pi * 2)
 
 
 
